@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>اكتشفي صفات الشيخ عبد الله بن جاسم آل ثاني</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&display=swap');
+
+* {
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  overflow: hidden !important;
+  font-family: 'Cairo', sans-serif;
+  background: radial-gradient(circle at top, #fbf4e4 0%, #e4d1aa 100%);
+  color: #49351e;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ترويسة مدمجة في أقصى الأعلى */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 22px;
+  background: linear-gradient(180deg, #8a2543 0%, #63172e 100%);
+  color: white;
+  border-bottom: 4px solid #d5a94e;
+  box-shadow: 0 4px 12px rgba(80, 20, 38, 0.3);
+  flex-shrink: 0;
+  z-index: 20;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 20px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.header-progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.progress-container {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 20px;
+  height: 15px;
+  width: 190px;
+  overflow: hidden;
+  padding: 2px;
+  border: 1px solid #d5a94e;
+}
+
+.progress-fill {
+  background: linear-gradient(180deg, #f3d57b 0%, #d49b2a 100%);
+  height: 100%;
+  width: 0%;
+  border-radius: 20px;
+  transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.progress-text {
+  font-weight: 800;
+  color: #fce8b2;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+/* الحاوية الرئيسية تملأ باقي الشاشة بالكامل بدون سكرول (الصورة يمين والسؤال والاختيارات يسار دائماً) */
+.main-viewport {
+  flex: 1;
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 12px 20px;
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 20px;
+  min-height: 0;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+/* ================= القسم الأيمن: صورة الشيخ عبد الله ================= */
+.panel {
+  background: linear-gradient(145deg, #fffdf8, #f9eed8);
+  border: 2px solid #dfc48c;
+  border-radius: 22px;
+  padding: 12px 16px;
+  box-shadow: 0 10px 24px rgba(73, 53, 30, 0.12), 0 5px 0 #cbb07a;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.panel h2 {
+  text-align: center;
+  color: #711e37;
+  font-size: 18px;
+  margin: 0 0 8px;
+  flex-shrink: 0;
+}
+
+.portrait-container-inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+
+.portrait-frame {
+  background: linear-gradient(145deg, #693929, #432217);
+  padding: 12px;
+  border: 5px solid #d5a84c;
+  border-radius: 18px;
+  width: 100%;
+  max-width: 380px;
+  height: 100%;
+  max-height: 430px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.28), 0 5px 0 #8d6822;
+}
+
+.portrait-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 4px;
+  background: #b88b3a;
+  padding: 4px;
+  border-radius: 12px;
+  perspective: 900px;
+  min-height: 0;
+}
+
+.piece {
+  position: relative;
+  background-image: url('abdullah_bin_jassim_portrait.jpg');
+  background-size: 300% 200%;
+  background-repeat: no-repeat;
+  border-radius: 8px;
+  transform-style: preserve-3d;
+  transition: transform 0.85s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.85s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.piece:not(.revealed) {
+  filter: brightness(0.12);
+}
+
+.piece.revealed {
+  filter: brightness(1);
+  transform: rotateY(360deg) scale(1.01);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.piece::after {
+  content: "؟";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #882441, #5e152b);
+  color: #f8dc92;
+  font-size: 32px;
+  font-weight: 900;
+  border: 2px solid rgba(213, 169, 78, 0.45);
+  border-radius: 8px;
+  text-shadow: 0 3px 5px rgba(0, 0, 0, 0.4);
+  transition: opacity 0.6s ease;
+}
+
+.piece.revealed::after {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.portrait-caption {
+  text-align: center;
+  color: #711e37;
+  font-weight: 800;
+  font-size: 14.5px;
+  margin-top: 10px;
+  flex-shrink: 0;
+}
+
+/* ================= القسم الأيسر: السؤال والاختيارات ================= */
+.interaction-side {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.qa-block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.top-question-bar {
+  background: linear-gradient(180deg, #ffffff 0%, #fcf6e8 100%);
+  padding: 14px 18px;
+  border-radius: 18px;
+  border: 2px solid #dfc58e;
+  box-shadow: 0 6px 14px rgba(73, 53, 30, 0.1), 0 4px 0 #c9ad76;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.question-number {
+  display: inline-block;
+  background: #8a2543;
+  color: #fff8e7;
+  padding: 3px 16px;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 13.5px;
+  margin-bottom: 6px;
+}
+
+.question {
+  font-size: 18px;
+  font-weight: 900;
+  margin: 0;
+  line-height: 1.55;
+  color: #3d2a16;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.option {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #d6b87c;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #fffdf7 0%, #f3e2be 100%);
+  color: #4b3219;
+  font-family: inherit;
+  font-size: 16.5px;
+  font-weight: 800;
+  cursor: pointer;
+  text-align: center;
+  box-shadow: 0 4px 0 #bfa065, 0 6px 12px rgba(75, 50, 25, 0.15);
+  transition: transform 0.14s ease, box-shadow 0.14s ease, background 0.2s ease;
+}
+
+.option:hover:not(:disabled) {
+  background: linear-gradient(180deg, #ffffff 0%, #f7e9ca 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #bfa065, 0 10px 16px rgba(75, 50, 25, 0.2);
+}
+
+.option:active:not(:disabled) {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #bfa065;
+}
+
+.option:disabled {
+  cursor: default;
+}
+
+.option.correct {
+  background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%) !important;
+  border-color: #14532d !important;
+  color: #ffffff !important;
+  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 0 #14532d !important;
+  transform: scale(1.02);
+}
+
+.option.wrong {
+  background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%) !important;
+  border-color: #7f1d1d !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 0 #7f1d1d !important;
+  animation: shake3D 0.4s ease;
+}
+
+@keyframes shake3D {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-7px); }
+  50% { transform: translateX(7px); }
+  75% { transform: translateX(-5px); }
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.93); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* رسالة التشجيع المدمجة تظهر بعد اختفاء السؤال والاختيارات */
+.feedback-banner {
+  display: none;
+  background: linear-gradient(180deg, #f0fdf4 0%, #dcfce7 100%);
+  border: 2px solid #22c55e;
+  color: #14532d;
+  padding: 18px 20px;
+  border-radius: 18px;
+  text-align: center;
+  font-weight: 800;
+  font-size: 17px;
+  line-height: 1.7;
+  box-shadow: 0 6px 15px rgba(22, 163, 74, 0.15);
+  animation: popIn 0.3s ease forwards;
+}
+
+.feedback-banner.wrong-msg {
+  display: block;
+  background: linear-gradient(180deg, #fef2f2 0%, #fee2e2 100%);
+  border-color: #ef4444;
+  color: #7f1d1d;
+  padding: 10px 14px;
+  font-size: 15.5px;
+}
+
+/* زر الانتقال للسؤال التالي */
+.next {
+  display: none;
+  width: 100%;
+  margin: 0 auto;
+  background: linear-gradient(180deg, #8e2745 0%, #68172f 100%);
+  color: #fff9eb;
+  padding: 14px 20px;
+  border: 2px solid #d5a94e;
+  border-radius: 15px;
+  font-family: inherit;
+  font-weight: 900;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 0 5px 0 #450d1e, 0 8px 16px rgba(104, 23, 47, 0.3);
+  transition: transform 0.14s ease;
+  animation: popIn 0.3s ease forwards;
+}
+
+.next:hover {
+  transform: translateY(-2px);
+}
+
+.next:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 #450d1e;
+}
+
+/* شاشة النهاية المدمجة */
+.final {
+  display: none;
+  text-align: center;
+  background: linear-gradient(145deg, #fffdf6, #f7ead0);
+  padding: 22px 24px;
+  border-radius: 20px;
+  border: 2.5px solid #d5ad5b;
+  box-shadow: 0 10px 24px rgba(73, 53, 30, 0.18), 0 5px 0 #b89246;
+  animation: popIn 0.35s ease forwards;
+}
+
+.final h2 {
+  color: #711e37;
+  font-size: 20px;
+  margin: 0 0 10px;
+}
+
+.final p {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.7;
+  margin: 0 0 16px;
+  color: #3d2a16;
+}
+
+.final button {
+  background: linear-gradient(180deg, #8e2745 0%, #68172f 100%);
+  color: white;
+  border: 2px solid #d5a94e;
+  padding: 12px 32px;
+  border-radius: 14px;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 17px;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #450d1e;
+}
+
+@media (max-width: 600px) {
+  .main-viewport {
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: 10px;
+    padding: 8px 10px;
+  }
+  .option {
+    padding: 8px 6px;
+    font-size: 13px;
+  }
+  .question {
+    font-size: 14px;
+  }
+  header h1 {
+    font-size: 14px;
+  }
+  .progress-container {
+    width: 90px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ترويسة مدمجة في أعلى الشاشة -->
+<header>
+  <h1>👑 اكتشفي صفات الشيخ عبد الله بن جاسم آل ثاني</h1>
+  <div class="header-progress">
+    <div class="progress-container">
+      <div class="progress-fill" id="progress"></div>
+    </div>
+    <div class="progress-text" id="progressText">0 من 6 صفات</div>
+  </div>
+</header>
+
+<div class="main-viewport">
+
+  <!-- 1. الجانب الأيمن: صورة الشيخ عبد الله بن جاسم آل ثاني -->
+  <div class="panel">
+    <h2>👑 صورة الشيخ عبد الله بن جاسم آل ثاني</h2>
+    <div class="portrait-container-inner">
+      <div class="portrait-frame">
+        <div class="portrait-grid">
+          <div class="piece" id="piece0" style="background-position:100% 0%"></div>
+          <div class="piece" id="piece1" style="background-position:50% 0%"></div>
+          <div class="piece" id="piece2" style="background-position:0% 0%"></div>
+          <div class="piece" id="piece3" style="background-position:100% 100%"></div>
+          <div class="piece" id="piece4" style="background-position:50% 100%"></div>
+          <div class="piece" id="piece5" style="background-position:0% 100%"></div>
+        </div>
+      </div>
+    </div>
+    <div class="portrait-caption">كل إجابة صحيحة تكشف جزءًا جديدًا من الصورة!</div>
+  </div>
+
+  <!-- 2. الجانب الأيسر: السؤال فوق الاختيارات مباشرة + رسالة التشجيع + زر التالي -->
+  <div class="interaction-side">
+    <div class="qa-block" id="qaBlock">
+      <div class="top-question-bar" id="questionBox">
+        <div class="question-number" id="number">الصفة رقم 1 من 6</div>
+        <div class="question" id="question"></div>
+      </div>
+      <div class="options" id="options"></div>
+    </div>
+
+    <!-- رسالة التشجيع المدمجة تظهر مكان السؤال بعد الإجابة الصحيحة -->
+    <div class="feedback-banner" id="feedback"></div>
+
+    <button class="next" id="next" onclick="nextQuestion()">اكتشفي الصفة التالية ⬅</button>
+
+    <div class="final" id="final">
+      <h2>🎉 أحسنتِ! اكتملت صورة الشيخ عبد الله بن جاسم آل ثاني 🎉</h2>
+      <p>كان ذكيًا، محافظًا على شرائع الإسلام، عفيفًا، كريم الشمائل، محبًا لأهل العلم، ومتأدبًا بالآداب الشرعية.</p>
+      <button onclick="location.reload()">إعادة اللعبة 🔄</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// بيانات الأسئلة والصفات
+const questions = [
+  {
+    q: "كان الشيخ عبد الله يتمتع بقدرة على الفهم وحسن التفكير، فما الصفة التي تعبّر عن ذلك؟",
+    options: ["ذكي", "عفيف", "كريم الشمائل", "محب لأهل العلم"],
+    answer: 0,
+    trait: "ذكي",
+    explain: "اكتشفنا أنه كان رجلًا ذكيًا جدًا."
+  },
+  {
+    q: "كان يحرص على الالتزام بأوامر الدين وتعاليمه، فما الصفة المناسبة؟",
+    options: ["محب للمال", "محافظ على شرائع الإسلام", "كثير السفر", "شديد الغضب"],
+    answer: 1,
+    trait: "محافظ على شرائع الإسلام",
+    explain: "كان محافظًا على شرائع الإسلام."
+  },
+  {
+    q: "كان بعيدًا عن كل ما يخالف العفة والنزاهة، فما الصفة التي تصفه؟",
+    options: ["متكبرًا", "متسرعًا", "عفيفًا", "مهملاً"],
+    answer: 2,
+    trait: "عفيفًا",
+    explain: "كان الشيخ عبد الله عفيفًا ونزيهًا."
+  },
+  {
+    q: "كان معروفًا بحسن الأخلاق والكرم والسخاء، فما الصفة التي تناسبه؟",
+    options: ["كريم الشمائل", "ضعيف الشخصية", "قليل الاهتمام", "متردد"],
+    answer: 0,
+    trait: "كريم الشمائل",
+    explain: "كان كريم الشمائل، حسن الأخلاق."
+  },
+  {
+    q: "كان يحب العلماء ويقدّر مكانتهم ويستمع إليهم، فما الصفة التي تميزه؟",
+    options: ["محب للعب", "محب لأهل العلم", "محب للعزلة", "محب للراحة"],
+    answer: 1,
+    trait: "محب لأهل العلم",
+    explain: "كان محبًا لأهل العلم ومعظمًا لهم."
+  },
+  {
+    q: "كان يلتزم بالأخلاق والآداب التي دعا إليها الإسلام في تعامله، فما الصفة المناسبة؟",
+    options: ["متكبرًا", "متسرعًا", "متأدبًا بالآداب الشرعية", "منشغلاً عن العلم"],
+    answer: 2,
+    trait: "متأدبًا بالآداب الشرعية",
+    explain: "كان متأدبًا بالآداب الشرعية."
+  }
+];
+
+let current = 0;
+let completed = 0;
+let locked = false;
+
+// مؤثرات صوتية لطيفة باستخدام Tone.js
+function playSound(type) {
+  try {
+    if (Tone.context.state !== 'running') {
+      Tone.start();
+    }
+    const synth = new Tone.PolySynth(Tone.Synth).toDestination();
+    synth.volume.value = -8;
+    if (type === 'correct') {
+      synth.triggerAttackRelease(["C5", "E5", "G5", "C6"], "8n");
+    } else if (type === 'wrong') {
+      synth.triggerAttackRelease(["E3", "Eb3"], "8n");
+    } else if (type === 'win') {
+      const now = Tone.now();
+      synth.triggerAttackRelease("C5", "8n", now);
+      synth.triggerAttackRelease("E5", "8n", now + 0.12);
+      synth.triggerAttackRelease("G5", "8n", now + 0.24);
+      synth.triggerAttackRelease("C6", "4n", now + 0.36);
+    }
+  } catch (e) {}
+}
+
+// ==========================================
+// منطق الأسئلة والتفاعل (السؤال فوق، الاختيارات تحت، ثم الاختفاء وكشف الصورة)
+// ==========================================
+function render() {
+  const item = questions[current];
+
+  document.getElementById("number").textContent = "الصفة رقم " + (current + 1) + " من 6";
+  document.getElementById("question").textContent = item.q;
+
+  const qaBlock = document.getElementById("qaBlock");
+  const questionBox = document.getElementById("questionBox");
+  const area = document.getElementById("options");
+  const feedbackEl = document.getElementById("feedback");
+  const nextBtn = document.getElementById("next");
+
+  qaBlock.style.display = "flex";
+  questionBox.style.display = "block";
+  area.style.display = "flex";
+  feedbackEl.style.display = "none";
+  feedbackEl.className = "feedback-banner";
+  nextBtn.style.display = "none";
+
+  area.innerHTML = "";
+  locked = false;
+
+  item.options.forEach((option, index) => {
+    const button = document.createElement("button");
+    button.className = "option";
+    button.textContent = option;
+    button.onclick = () => check(index, button);
+    area.appendChild(button);
+  });
+}
+
+function check(index, button) {
+  if (locked) return;
+
+  const item = questions[current];
+  const feedbackEl = document.getElementById("feedback");
+
+  if (index === item.answer) {
+    locked = true;
+    button.classList.add("correct");
+    playSound('correct');
+
+    document.querySelectorAll(".option").forEach(b => {
+      b.disabled = true;
+    });
+
+    completed++;
+    document.getElementById("progress").style.width = (completed / 6 * 100) + "%";
+    document.getElementById("progressText").textContent = completed + " من 6 صفات";
+
+    setTimeout(() => {
+      document.getElementById("qaBlock").style.display = "none";
+      document.getElementById("questionBox").style.display = "none";
+      document.getElementById("options").style.display = "none";
+
+      // كشف قطعة الصورة المقابلة بحركة ثلاثية الأبعاد
+      document.getElementById("piece" + current).classList.add("revealed");
+
+      feedbackEl.className = "feedback-banner";
+      feedbackEl.style.display = "block";
+      feedbackEl.innerHTML =
+        "✨ أحسنتِ! " + item.explain +
+        " — الصفة المكتشفة: <strong style='color:#711e37'>" + item.trait + "</strong>";
+
+      const nextBtn = document.getElementById("next");
+      nextBtn.style.display = "block";
+
+      if (current === 5) {
+        nextBtn.textContent = "اكشفي الصورة كاملة 🎉";
+      }
+    }, 650);
+
+  } else {
+    button.classList.add("wrong");
+    playSound('wrong');
+    feedbackEl.className = "feedback-banner wrong-msg";
+    feedbackEl.style.display = "block";
+    feedbackEl.textContent = "حاولي مرة أخرى 🌷";
+    setTimeout(() => {
+      button.classList.remove("wrong");
+    }, 650);
+  }
+}
+
+function nextQuestion() {
+  if (current < 5) {
+    current++;
+    render();
+  } else {
+    playSound('win');
+    document.getElementById("qaBlock").style.display = "none";
+    document.getElementById("questionBox").style.display = "none";
+    document.getElementById("options").style.display = "none";
+    document.getElementById("feedback").style.display = "none";
+    document.getElementById("next").style.display = "none";
+    document.getElementById("final").style.display = "block";
+  }
+}
+
+window.onload = function () {
+  render();
+};
+</script>
+
+</body>
+</html>
